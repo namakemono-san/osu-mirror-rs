@@ -1,0 +1,25 @@
+[server]
+port = 8080
+host = "0.0.0.0"
+
+[database]
+url = "postgres://postgres:postgres@localhost:5432/osu_mirror"
+max_connections = 20
+
+[storage]
+backend = "local"
+
+[storage.local]
+path = "./data/beatmaps"
+
+[osu]
+client_id = ""
+client_secret = ""
+
+[crawler]
+enabled = true
+sync_interval_seconds = 300
+
+[rate_limit]
+requests_per_minute = 200
+downloads_per_10min = 80
