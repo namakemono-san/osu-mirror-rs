@@ -161,6 +161,32 @@ pub async fn openapi_json() -> impl IntoResponse {
                 }
             },
 
+            "/v2/beatmapsets/{id}": {
+                "get": {
+                    "tags": ["osu!v2 api"],
+                    "summary": "Get beatmapset",
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "required": true,
+                            "schema": { "type": "integer" }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Beatmapset found",
+                            "content": {
+                                "application/json": {
+                                    "schema": { "type": "array", "items": { "type": "object" } }
+                                }
+                            }
+                        },
+                        "404": { "description": "Not found" }
+                    }
+                }
+            },
+
             "/d/{id}": {
                 "get": {
                     "summary": "Download beatmapset (.osz)",

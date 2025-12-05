@@ -2,6 +2,7 @@ use super::docs::openapi_json;
 use super::download;
 use super::health;
 use super::v1;
+use super::v2;
 
 use crate::AppState;
 use crate::middleware::rate_limit::RateLimitLayer;
@@ -44,6 +45,8 @@ async fn docs_handler() -> Html<String> {
     <script>
       Scalar.createApiReference('#app', {
         url: '/docs/openapi.json',
+        defaultOpenAllTags: true,
+        showDeveloperTools: "never",
       })
     </script>
   </body>
@@ -54,9 +57,11 @@ async fn docs_handler() -> Html<String> {
 
 pub fn create_router(state: AppState) -> Router {
     let v1_router = v1::routes::router();
+    let v2_router = v2::routes::router();
 
     Router::new()
         .nest("/v1", v1_router)
+        .nest("/v2", v2_router)
         // Status
         .route("/health", get(health::health_check))
         .route("/status", get(health::status))

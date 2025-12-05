@@ -305,3 +305,22 @@ pub async fn search_beatmapsets(
         })
         .collect())
 }
+
+pub async fn count_beatmapsets(pool: &PgPool, keyword: &str, status: Option<&str>) -> Result<i64> {
+    let mut sql = String::from("SELECT COUNT(*) as count FROM beatmapsets WHERE 1=1");
+
+    if !keyword.is_empty() {
+        sql.push_str(
+            " AND (title ILIKE $1 OR artist ILIKE $1 OR creator ILIKE $1 OR tags ILIKE $1)",
+        );
+    }
+
+    if let Some(s) = status {
+        sql.push_str(&format!(" AND status = '{}'", s));
+    }
+
+    let kw = format!("%{}%", keyword);
+    let row = sqlx::query(&sql).bind(kw).fetch_one(pool).await?;
+
+    Ok(row.try_get::<i64, _>("count")?)
+}
